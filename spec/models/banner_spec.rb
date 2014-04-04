@@ -6,6 +6,4 @@ describe Banner do
   #validatees weight; must be greater then 0
   it {should_not allow_value(0).for(:weight)}
   it {should allow_value(1).for(:weight)}
-  
-  
 end

@@ -6,7 +6,7 @@ class CreateBanners < ActiveRecord::Migration
       t.timestamps
     end
     
-    add_attachment :banners, :banner
+    add_attachment :banners, :image
     
     add_index :banners, :campaign_id
   end

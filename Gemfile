@@ -1,10 +1,13 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.0'
+gem 'rails', '4.0.4'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
+
+# Use thin as webserver
+gem 'thin'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
@@ -12,8 +15,6 @@ gem 'sass-rails', '~> 4.0.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
-# Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -30,6 +31,9 @@ gem 'jbuilder', '~> 1.2'
 gem "paperclip"
 
 gem "redis-objects"
+gem 'redis-session-store'
+
+gem "seed-fu", github: "mbleigh/seed-fu"
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -41,13 +45,14 @@ group :test do
   gem "factory_girl"
   gem 'shoulda-matchers'
   gem "database_cleaner"
+  gem "curb"
 end
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
 # Use unicorn as the app server
-# gem 'unicorn'
+gem 'unicorn'
 
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
