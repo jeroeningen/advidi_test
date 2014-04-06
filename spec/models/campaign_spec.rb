@@ -93,7 +93,7 @@ describe Campaign do
     end
     it "finds the banner_ids and random_ratio by the id from Redis" do
       Campaign.find_from_redis_by_id(@campaign_with_banners.id).get_banner_ids_from_redis.uniq.size.should == @campaign_with_banners.banner_ids.size
-      Campaign.find_from_redis_by_id(@campaign_with_banners.id).get_random_ratio_from_redis.should == @campaign_with_banners.random_ratio
+      Campaign.find_from_redis_by_id(@campaign_with_banners.id).random_ratio.should == @campaign_with_banners.random_ratio
       
       # Check if the Campaign is deleted from Redis after the campaign is deleted
       Campaign.find_from_redis_by_id(@second_campaign_with_banners.id).should be_blank
@@ -158,7 +158,7 @@ describe Campaign do
           @banner_ids_left_and_requests_made[:current_banner_id].should > 0
           @banner_ids_left_and_requests_made[:current_banner_path].should_not be_empty
           #FIXME: Not tested, because the content_type is not saved
-          # @banner_ids_left_and_requests_made[:current_banner_content_type].should_not be_empty
+          @banner_ids_left_and_requests_made[:current_banner_content_type].should_not be_empty
           @banner_ids_left_and_requests_made[:requests_made][:current_request].should be_present
           @banner_ids_left_and_requests_made[:requests_made][:random_ratio].should == 100
           @banner_ids_left_and_requests_made[:requests_made][:weighted].should be_present

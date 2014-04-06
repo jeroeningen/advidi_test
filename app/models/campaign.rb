@@ -1,3 +1,4 @@
+require 'redis-objects'
 class Campaign < ActiveRecord::Base
   has_many :banners, :dependent => :destroy
   
@@ -23,9 +24,11 @@ class Campaign < ActiveRecord::Base
   end
   
   # Set the Campaign ID so the attributes can be retrieved from the Redis hash keys
+  # This function is inspired by the following article: http://squarism.com/2013/05/04/using-redis-as-a-database/
   def self.find_from_redis_by_id id
-    campaign = new(:id => id)
-    if campaign.get_banner_ids_from_redis.present? && campaign.get_random_ratio_from_redis
+    campaign = new(:id => id, :random_ratio => random_ratio_from_redis[id])
+    
+    if campaign.get_banner_ids_from_redis.present? && campaign.get_random_ratio_from_redis.present?
       campaign
     end
   end
@@ -114,6 +117,4 @@ class Campaign < ActiveRecord::Base
       :banner_ids_left => banner_ids_left
     }
   end
-  
-  # TODO: Implement find, so it gets the objects from Redis. See: http://squarism.com/2013/05/04/using-redis-as-a-database/
 end

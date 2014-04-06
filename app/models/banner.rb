@@ -1,3 +1,5 @@
+require 'carrierwave/orm/activerecord'
+require_relative "../uploaders/image_uploader"
 class Banner < ActiveRecord::Base
   belongs_to :campaign
   
@@ -10,8 +12,7 @@ class Banner < ActiveRecord::Base
   after_save :add_banner_id_to_redis
   after_destroy :delete_banner_id_from_redis
   
-  has_attached_file :image
-  validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
+  mount_uploader :image, ImageUploader
   
   # Add the banner id to Redis for the campaign
   def add_banner_id_to_redis
@@ -31,7 +32,12 @@ class Banner < ActiveRecord::Base
     #Add the banner ids to Redis as a value
     Campaign.banner_ids_from_redis[campaign_id] = banner_ids_from_redis.join(" ")
     
-    Banner.paths[self.id] = image.path
+    # At this moment the image path is a temporary path.
+    # The image path will be set in the callback 'after_commit'.
+    # Setting the image path for Redis in the callback 'after_commit', 
+    # may conflict with the callback 'after_destroy', where I delete the path from Redis.
+    # so that's why I set it this way.
+    Banner.paths[self.id] = "#{Dir.pwd}/public/#{image.store_path}"
     Banner.content_types[self.id] = image.content_type
   end
   
@@ -40,7 +46,7 @@ class Banner < ActiveRecord::Base
     if campaign.get_banner_ids_from_redis.present?
       banner_ids_from_redis = campaign.get_banner_ids_from_redis
       banner_ids_from_redis.delete self.id
-      campaign.banner_ids_from_redis[campaign_id] = banner_ids_from_redis.join(" ")
+      Campaign.banner_ids_from_redis[campaign_id] = banner_ids_from_redis.join(" ")
     end
     
     Banner.paths.delete self.id

@@ -3,10 +3,9 @@ class CreateBanners < ActiveRecord::Migration
     create_table :banners do |t|
       t.integer :campaign_id, :default => 0
       t.integer :weight, :default => 1
+      t.string :image
       t.timestamps
     end
-    
-    add_attachment :banners, :image
     
     add_index :banners, :campaign_id
   end

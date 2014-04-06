@@ -9,24 +9,48 @@ So you are given the following business requirements:
 * In the back­end, you should also allow the user to “weight” banners (set ratios, see above) within a campaign._
 
 ##Setup
-Before starting your rails server, please run the following commands:
+First, create a file config/database.rb and set the databases like this:
+```
+configure :development do
+set :database, 'postgres://<username>:<password>@localhost/<database>'
+end
+
+configure :production do
+end
+
+configure :test do
+  set :database, 'postgres://<username>:<password>@localhost/<database>'
+end
+```
+
+Before starting your server, please run the following command:
 ```
 rake db:create
 rake db:migrate
-rake db:seed_fu
+rake db:seed
+```
+
+You can test the application with the following command:
+```
+rspec
+```
+
+##Starting the app
+Please run the following command to start the app
+```
+rackup
 ```
 
 ##How this application works
 TODO
 
 ##Limitations / TODO's
-* To speed up the application, please strip off as many Rails components where possible
-* Already 'seen' images and the current request-ratio are stored in the session. This could result in a Cookie overflow if a campaign has too many images. A solution could be to store the session in the database or in Redis. In case of a database session store we should carefully check how many calls to the database will be done. In case of Redis I'm not sure whether Redis will be even fast when a lots of sessions are stored.
+* To speed up the application, please strip off ActiveRecord and implement Sequel
+* 'Banner_ids_left' and the current request-ratio are stored in the session. This could result in a Cookie overflow if a campaign has too many images. A solution could be to store the session in Rack:Session:Pool or in Redis. Storing the session in Redis using the gem 'rack-session-redis' slows down the application with 5 seconds per 5.000 requests. Using Rack:Session:Pool is about as fast as storing it in a cookie, so I've chosen to use Rack:Session:Pool
 * Because of limited time, I skipped creating a very user friendly admin GUI with a slider for the ratio and a multiple file uploader to upload the images
 * Because of limited time, I used Heroku for deployment, so no Capistrano script is added for deployment.
 * For selecting a banner, native Ruby functions are used. These functions are mostly known as 'not so fast'. The cumulative density function might be the fastest way to select a banner or by using a hash to determine which banner ids are left. Unfortunately I did not have the time to impement it yet.
-* If I can use a hash to determine which banner ids left, there is less space needed in the session for all ids
-* Not thw complete Campaign is saved in Redis. Currently this causes one database query per request. Stripping off this, saves up about 7 seconds for 5.000 requests.
+* If I can use a hash to determine which banners are already 'seen' instead of which banner ids are left, there is less space needed in the session for all ids
 * The Redis function 'get_banner_ids_from_redis looks to be VERY VERY slow'
 * Use RDoc for comments
 * Use RubyProfiler for benchmarking
@@ -43,13 +67,21 @@ Please note the following:
 * For testing purposes 400 test banners are included in this application, so you can easily seed the database. You can find them in the path 'db/fixtures/images'. In reality, this is quiet an ugly solution to include the images in the fixures directory.
 * The test coverage of the function '.get_banner_and_requests_made(requests_made_and_banners_seen)' may not always return the right test results. In rare cases, the weighted request might return different values then expected.
 
+
 ##Bugs
-* The Rspec test suite can't be completed in one run. Some tests might fail and needs to be runned standalone.
-* In test mode the banner.image.content_type is nil.
+* When running the following command
+```
+rspec
+````
+Some test may fail and need to be runned standalone.
+* The Rspec test displays all the queries, which gives a bad overview. This setting seems not to work:
+```
+set :logging, false
+```
 
 ##Benchmarking
 Alll the benchmarks lives in the following directory 
 ```
-spec/benchmarks/
+benchmarks/
 ````
 For the requests I use the gem 'curb', becuase it is super fast as said in the conclusion of this article: http://bibwild.wordpress.com/2012/04/30/ruby-http-performance-shootout-redux/.
