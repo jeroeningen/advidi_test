@@ -1,0 +1,21 @@
+// Mostly when I create an admin-interface I like to use partials for the 'new' and 'edit' view to overcome duplicated code.
+// Because Sinatra not support partials by default I don't use partials for this simple interface.
+%h1 Add banner
+
+- if !@banner.errors.messages.empty?
+  %div.alert.alert-error
+    - @banner.errors.messages.each do |attribute, message|
+      %div= "#{attribute}: #{message.join(", ")}"
+
+%form{:action => "/admin/campaigns/#{params[:campaign_id]}/banners", :method => :post, :enctype => "multipart/form-data"}
+  %fieldset
+    %input{:type => :hidden, :name => "banner[campaign_id]", :value => params[:campaign_id]}
+    %label Weight
+
+    //weight has a default value in the database
+    %input{:name => "banner[weight]", :value => @banner.weight}
+    %label Image
+
+    %input{:name => "banner[image]", :type => :file}
+
+  %button.btn{:type => :submit} Create banner

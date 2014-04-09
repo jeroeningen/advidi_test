@@ -3,6 +3,7 @@ require File.join(File.dirname(__FILE__), '..', 'app.rb')
 require 'sinatra'
 require 'rack/test'
 require 'shoulda/matchers'
+require 'capybara/rspec'
 
 # setup test environment
 set :environment, :test
@@ -33,4 +34,10 @@ RSpec.configure do |config|
 
   require 'factory_girl'
   Dir[Dir.pwd + "/spec/factories/**/*.rb"].each {|f| require f}
+
+  # After running rspec, delete the tmp dirs by hand. 
+  # This is probably not done automatically, because of the use of the database cleaner
+  config.after(:all) do
+    FileUtils.rm_rf Dir.glob("#{Dir.pwd}/public/uploads/tmp/*")
+  end
 end

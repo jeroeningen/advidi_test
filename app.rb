@@ -4,10 +4,11 @@
 require 'sinatra'
 require_relative "config/requirements"
 
-get '/campaigns/:id' do
-  session[:banner_and_requests_made] = 
-    Campaign.find_from_redis_by_id(params[:id]).get_banner_and_requests_made(session[:banner_and_requests_made])
-  banner_path = session[:banner_and_requests_made][:current_banner_path]
-  content_type = session[:banner_and_requests_made][:current_banner_content_type]
-  send_file banner_path, type: content_type, :disposition => "inline"
+# This is a very ugly hack to get the Capybara test of the admin-interface working.
+before "/admin*" do
+  protected! if !settings.test?
 end
+
+# In Rails this should be added to the config-dir
+# Because a lot of 'controller-logic' is inside the routes, I decided to add it to the root-directory
+require_relative "routes"

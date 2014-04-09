@@ -82,14 +82,11 @@ class Campaign < ActiveRecord::Base
   
   # Return a Hash containing the banners left, current banner and requests made
   def get_banner_and_requests_made banner_and_requests_made
-    # initiate the hash 'banner_and_requests_made' if not exists
+    # initiate the hash 'banner_and_requests_made' if not exists. Needed for the first request
     banner_and_requests_made = {} if banner_and_requests_made.blank?
     
-    #create the requests_made hash if nott exists
+    #create the requests_made hash if not exists. Needed for the first request.
     banner_and_requests_made[:requests_made] = {} if banner_and_requests_made[:requests_made].blank?
-    
-    # set the request ratio
-    banner_and_requests_made[:requests_made][:random_ratio] = get_random_ratio_from_redis
     
     # initiate the current_banner_id
     current_banner_id = 0

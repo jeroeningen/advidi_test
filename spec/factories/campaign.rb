@@ -1,4 +1,5 @@
-campaign_with_banners, campaign_with_banners2, campaign_with_banners3, second_campaign_with_banners, updated_banners, two_banners, high_weighted_banners = [], [], [], [], [], [], []
+campaign_with_banners, campaign_with_banners2, campaign_with_banners3, campaign_with_banners4 = [], [], [], []
+second_campaign_with_banners, updated_banners, two_banners, high_weighted_banners = [], [], [], []
 400.times do
   campaign_with_banners << FactoryGirl.build(:banner)
 end
@@ -7,6 +8,9 @@ end
 end
 400.times do
   campaign_with_banners3 << FactoryGirl.build(:banner)
+end
+400.times do
+  campaign_with_banners4 << FactoryGirl.build(:banner)
 end
 400.times do
   second_campaign_with_banners << FactoryGirl.build(:banner)
@@ -38,6 +42,7 @@ FactoryGirl.define do
     name "weighted_requests_campaign"
     random_ratio 0
   end
+  #duplicated factories made to overcome that test will fail
   factory :campaign_with_banners, :class => :campaign do
     name "campaign_with_banners"
     random_ratio 100
@@ -52,6 +57,16 @@ FactoryGirl.define do
     name "campaign_with_banners3"
     random_ratio 100
     banners campaign_with_banners3
+  end
+  factory :campaign_with_banners4, :class => :campaign do
+    name "campaign_with_banners4"
+    random_ratio 100
+    banners campaign_with_banners4
+  end
+  factory :campaign_with_two_banners, :class => :campaign do
+    name "campaign_with_two_banners"
+    random_ratio 100
+    banners two_banners
   end
   factory :second_campaign_with_banners, :class => :campaign do
     name "second_campaign_with_banners"

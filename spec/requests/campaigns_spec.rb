@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "Campaigns" do
   context "/" do
     before(:all) do
-      @campaign_with_banners = FactoryGirl.create(:campaign_with_banners)
+      @campaign_with_banners = FactoryGirl.create(:campaign_with_banners4)
     end
      
     it "returns a banner" do

@@ -1,0 +1,22 @@
+// Mostly when I create an admin-interface I like to use partials for the 'new' and 'edit' view to overcome duplicated code.
+// Because Sinatra not support partials by default I don't use partials for this simple interface.
+%a{:href => "/admin/campaigns/#{@campaign.id}"} Show campaign
+
+%h1 Edit campaign
+
+- if !@campaign.errors.messages.empty?
+  %div.alert.alert-error
+    - @campaign.errors.messages.each do |attribute, message|
+      %li= "#{attribute}: #{message.join(", ")}"
+
+%form{:action => "/admin/campaigns/#{@campaign.id}", :method => :post}
+  %fieldset
+    %input{:type => "hidden", :name => "_method", :value => "put"}
+    
+    %label Name
+    %input{:name => "campaign[name]", :value => @campaign.name}
+    
+    %label Random ratio
+    %input{:name => "campaign[random_ratio]", :value => @campaign.random_ratio}
+    
+  %button.btn{:type => :submit} Update campaign

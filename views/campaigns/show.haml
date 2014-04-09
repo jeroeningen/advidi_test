@@ -1,0 +1,39 @@
+%h1 Campaign
+%table.table
+  %tr
+    %th Name
+    %th Random ratio
+  %tr
+    %td= @campaign.name
+    %td= @campaign.random_ratio
+
+%table.table
+  %tr
+    %td
+      %a{:href => "/admin/campaigns/#{@campaign.id}/edit"} Edit campaign
+    %td
+      %a{:href => "/admin/campaigns/#{@campaign.id}/banners/new"} Add banner
+    %td
+      %form{:action => "/admin/campaigns/#{@campaign.id}", :method => "post"}
+        %input{:type => "hidden", :name => "_method", :value => "delete"}
+        %button.btn-link{:type => :submit} Destroy campaign
+    
+%h2 Banners
+- if @campaign.banners.size == 0
+  %div.alert No banners added yet!
+- else
+  %table.table
+    %tr
+      %th Image
+      %th Weight
+      %th
+    - @campaign.banners.each do |banner|
+      %tr
+        %td
+          %img{:src => banner.image.url}
+        %td= banner.weight
+        %td
+          //To create a RESTFUL route I needed to create a form.
+          %form{:action => "/admin/campaigns/#{@campaign.id}/banners/#{banner.id}", :method => "post"}
+            %input{:type => "hidden", :name => "_method", :value => "delete"}
+            %button.btn-link{:type => :submit} Destroy banner

@@ -6,3 +6,7 @@ images = Dir.entries("#{Dir.pwd}/db/fixtures/images/").select {|f| !File.directo
 400.times do |i|
   Banner.create :id => i, :campaign_id => 1, :weight => (i % 2) + 1, :image => File.open("#{Dir.pwd}/db/fixtures/images/#{images[i]}")
 end
+
+# Reset the sequence, needed for Postgres. See: http://stackoverflow.com/questions/2097052/rails-way-to-reset-seed-on-id-field
+ActiveRecord::Base.connection.reset_pk_sequence!('campaigns')
+ActiveRecord::Base.connection.reset_pk_sequence!('banners')

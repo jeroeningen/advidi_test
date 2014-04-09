@@ -1,0 +1,13 @@
+!!!
+%html
+  %head
+    %link{:href =>"/css/bootstrap.css", :rel => "stylesheet"}
+    %link{:href => "/css/bootstrap-responsive.css", :rel => "stylesheet"}
+    %link{:href =>"/css/advidi_test.css", :rel => "stylesheet"}
+  %body
+  %div.container
+    %ul.nav.nav-table
+      %li.active
+        %a{:href => "/admin/campaigns"} Home
+    %div#content
+      %div.span4= yield

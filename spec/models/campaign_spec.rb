@@ -55,13 +55,16 @@ describe Campaign do
       before(:all) do
         @mixed_requests_campaign = FactoryGirl.create(:mixed_requests_campaign)
         # For better reading of the test I calculated the common denominator by myself
-        @mixed_requests_made, @common_denominator = {}, 5
+        @mixed_requests_made = {}
+        @common_denominator = 5
         (100 / @common_denominator).times do
           @mixed_requests_made = @mixed_requests_campaign.request(@mixed_requests_made)
         end
         
         @other_mixed_requests_campaign = FactoryGirl.create(:other_mixed_requests_campaign)
-        @other_mixed_requests_made, @other_common_denominator = {}, 2
+        # For better reading of the test I calculated the common denominator by myself
+        @other_mixed_requests_made = {}
+        @other_common_denominator = 2
         (100 / @other_common_denominator).times do
           @other_mixed_requests_made = @other_mixed_requests_campaign.request(@other_mixed_requests_made)
         end
@@ -157,10 +160,9 @@ describe Campaign do
           @banner_ids_left_and_requests_made = Campaign.find_from_redis_by_id(@campaign_with_banners.id).get_banner_and_requests_made(@banner_ids_left_and_requests_made)
           @banner_ids_left_and_requests_made[:current_banner_id].should > 0
           @banner_ids_left_and_requests_made[:current_banner_path].should_not be_empty
-          #FIXME: Not tested, because the content_type is not saved
           @banner_ids_left_and_requests_made[:current_banner_content_type].should_not be_empty
           @banner_ids_left_and_requests_made[:requests_made][:current_request].should be_present
-          @banner_ids_left_and_requests_made[:requests_made][:random_ratio].should == 100
+          @banner_ids_left_and_requests_made[:requests_made][:random].should be_present
           @banner_ids_left_and_requests_made[:requests_made][:weighted].should be_present
           @banner_ids_left_and_requests_made[:banner_ids_left].should_not include(@banner_ids_left_and_requests_made[:current_banner_id])
         end
