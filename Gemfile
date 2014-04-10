@@ -23,6 +23,9 @@ gem 'thin'
 #Use Carrierwave for uploads
 gem "carrierwave"
 
+# Use fog for Amazon S3
+gem 'fog'
+
 # Use Redis for caching
 gem "redis-objects"
 
