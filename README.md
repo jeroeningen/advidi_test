@@ -177,6 +177,7 @@ Because of a lack of time I was not able to substitute ActiveRecord for Sequel a
 Hopefully if I had the time I could reach over 10.000 requests per minute.
 
 ##Limitations / TODO's
+* Fix S3 file uploads on Heroku. Because of this currently after each deploy, all uploaded banners will be lost, because they are stored on the local filesystem.
 * To speed up the application, please strip off ActiveRecord and implement Sequel
 * Use plain Ruby scripts where possible. So for example extract functions from the model that does not depend on the model itself.
 * Add just one key to Redis and put every attribute in that key, instead of a key for every attribute
@@ -195,6 +196,7 @@ Hopefully if I had the time I could reach over 10.000 requests per minute.
 * Substitute 'Dir.pwd' for 'settings.root'
 * Create a Rake Task to 'refill' Redis. Useful e.g. if Redis is flushed.
 * Eliminate warning 'I18n.enforce_available_locales will default to true in the future. If you really want to skip validation of your locale you can set I18n.enforce_available_locales = false to avoid this message.'
+* Routes with a '/' on the end will not work. E.g. '/admin' works, but '/admin/' not. I think it's a very simple issue, but because of a lack of time I couldn't find out.
 
 
 ##Additional notes
@@ -232,6 +234,9 @@ Please note that a 'heroku' branch is added to Github to deploy to Heroku. This 
 In practice I prefer to setup my own VPS. The benefit of your own VPS is in my opinion that you have full control. The downside of your own VPS is that the first deployment may take some time, because you have to establish the VPS and write your own capistrano-script before you can deploy.
 On Heroku you don't have full-control on the server, but deploying for the first time is in most cases easier. So due to a lack of time and the simplicity of Heroku I used Heroku in this case.
 
+Currently I have a major issue that S3 Webservices are not working on Heroku. Which means that the uploaded banners are stored on the local filesystem. So after each deploy all banners will be lost.
+Furthermore, the seed Raketask does not work on Heroku (it does not upload the images). This is because Heroku uses the emphemeral filesystem. See also: http://stackoverflow.com/questions/12290223/how-can-i-access-files-from-a-rake-task-on-heroku
+
 ##Testing with Rspec
 Application tested using Rspec and Ruby 2.0.0p247
 Please note the following:
@@ -257,7 +262,10 @@ set :logging, false
 rake db:seed
 ```
 Please uninstall activerecord-4.1.0 to proceed.
+
 * HTTP authentication disabled in the test-environment, because Capybara cannot handle it.
+
+* Hosting file uploads on S3 seems not to work on Heroku. This means when a new deploy is done, uploaded files are lost.
 
 ##Benchmarking
 Please note that only the benchmarks of the current app are written down. I forgot to write down interim results.

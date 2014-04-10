@@ -14,6 +14,9 @@ feature "Administer Campaigns" do
   end
   
   scenario "Administer a campaign" do
+    visit "/admin"
+    current_path.should == "/admin/campaigns"
+    
     visit "/admin/campaigns"
     page.should_not have_content @campaign_name
     
@@ -26,17 +29,22 @@ feature "Administer Campaigns" do
     
     page.should have_content @campaign_name
     
-    #Edit a campaign
+    # Edit a campaign
     visit "/admin/campaigns/#{Campaign.last.id}/edit"
     fill_in "campaign[name]", :with => @new_campaign_name
     click_button "Update campaign"
     Campaign.where(:name => @new_campaign_name, :random_ratio => @random_ratio).count.should == 1
-    
-    #View a campaign
+
+    # View a campaign in the frontend
     visit "/admin/campaigns/#{Campaign.last.id}"
     page.should have_content @new_campaign_name
+    click_link "Show in frontend"
+    #HACK: Body is tested for HTML image tag, because selenium doesnot support the function 'page.response_headers'
+    page.body.should include "<img"
+    # page.response_headers['Content-Type'].should == "image/png"
     
     #Add a banner
+    visit "/admin/campaigns/#{Campaign.last.id}"
     Campaign.where(:name => @new_campaign_name, :random_ratio => @random_ratio).first.banners.size.should == 0
     click_link "Add banner"
     attach_file "banner[image]", "#{Dir.pwd}/db/fixtures/images/image_100.png"

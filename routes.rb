@@ -1,3 +1,8 @@
+get "/" do
+  #HACK: A little ugly way to get the first banner ID from Redis.
+  redirect "/campaigns/#{Campaign.banner_ids_from_redis.first[0]}"
+end
+
 # GET /campaigns/:id
 get '/campaigns/:id' do
   session[:banner_and_requests_made] = 
@@ -8,6 +13,11 @@ get '/campaigns/:id' do
 end
 
 # Admin routes
+# GET /admin
+get '/admin' do
+  redirect "/admin/campaigns"
+end
+
 # GET /admin/campaigns
 get '/admin/campaigns' do
   # For simplicity, no pagination is used.
