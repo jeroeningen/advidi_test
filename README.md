@@ -227,7 +227,7 @@ For developing purposes 400 test banners are included in this application, so yo
 However Memcache might be a more accepted solution, I used Redis, because I'm more familiar to Redis..
 
 ###Deploying to Heroku
-Please note that a 'heroku' branch is added to Github to deploy to Heroku. This is because Heroku may require some specific configurations. For example my Gemfile.lock contains the gem 'railties 4.0/4'. This means that Heroku will start a Rails server, which will not work. So in the Heroku branch I deleted the Gemfile.lock. See also: https://devcenter.heroku.com/articles/ruby-support#rails-4-x-applications
+Please note that a 'heroku' branch is added to Github to deploy to Heroku. This is because Heroku may require some additional configuration. So for simplicity I did it in a seperate branch.
 
 In practice I prefer to setup my own VPS. The benefit of your own VPS is in my opinion that you have full control. The downside of your own VPS is that the first deployment may take some time, because you have to establish the VPS and write your own capistrano-script before you can deploy.
 On Heroku you don't have full-control on the server, but deploying for the first time is in most cases easier. So due to a lack of time and the simplicity of Heroku I used Heroku in this case.
