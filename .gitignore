@@ -21,4 +21,4 @@ config/database.yml
 config/database.rb
 db/schema.rb
 .DS_Store
-public/
+public/uploads/

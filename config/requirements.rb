@@ -26,7 +26,4 @@ end
 # Set the Redis path for Heroku
 $redis = Redis.new(url: ENV["REDISTOGO_URL"]) if ENV["REDISTOGO_URL"].present?
 
-# Set the public folder for Heroku
-set :public_folder, "#{Dir.pwd}/public"
-
 require_relative "settings"

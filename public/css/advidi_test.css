@@ -1,0 +1,8 @@
+ul.nav{
+  padding: 1em 0 0;
+}
+
+button.btn-link {
+  /* Align the button with other links */
+  margin-top: -3px;
+}
