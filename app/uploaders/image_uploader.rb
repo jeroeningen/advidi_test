@@ -1,3 +1,4 @@
 class ImageUploader < CarrierWave::Uploader::Base
-  storage :file
+  # Use Fog on Heroku
+  storage ($environment == :production ? :fog : :file)
 end

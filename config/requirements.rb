@@ -36,6 +36,9 @@ if settings.production?
     }
     config.fog_directory  = 'public/uploads'                   # required
   end
+  
+  #HACK: Global variable used in the uploader
+  $environment = :production
 end
 
 require_relative "settings"
