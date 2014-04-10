@@ -12,6 +12,7 @@ gem 'rake'
 
 # Use Active Record
 gem "sinatra-activerecord"
+gem 'activerecord', '4.0.4' # Fixed on version 4.0.4, otherwise migrations may fail.
 
 # Use postgresql as the database for Active Record
 gem 'pg'
