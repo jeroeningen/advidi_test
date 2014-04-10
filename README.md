@@ -28,7 +28,7 @@ Please install the following libraries:
 First, create a file config/database.rb and set the databases like this:
 ```
 configure :development do
-set :database, 'postgres://<username>:<password>@localhost/<database>'
+  set :database, 'postgres://<username>:<password>@localhost/<database>'
 end
 
 configure :production do
@@ -62,13 +62,16 @@ The username and password for the admin-interface are advidi / advidi
 
 To access the console please run the following command from the application root:
 ```
-irb -r ./app.rb
+tux
 ```
 
 Please run all the commands from the applicaton root, otherwise commands may not work because of the usage of the fuunction 
 ```
 Dir.pwd
 ```
+
+##Still problems with the app?
+If you still have problems setting up or running the application, please contact me at jeroeningen <at> gmail dot com.
 
 ##How this application works
 In this section I only describe the core-functionality as mentioned in the description of the test. I do not describe the amin-interface.
@@ -132,7 +135,7 @@ Note that the banner ID is added 'x' times, where x is equal to the weight. This
 ###Deleting a banner
 When a banner is deleted, the banner path and banner content type are removed from Redis as well as the banner ID is removed from the campaign in Redis. 
 
-###Pitfalls and progression during development
+##Pitfalls and progression during development
 I started with a Rails app, because I'm most familiar to Rails.
 To get a better performing app, using benchmarking I made the following progression:
 * Substitute Redis list for a Redis has_key
@@ -142,17 +145,17 @@ To get a better performing app, using benchmarking I made the following progress
 * Stripping off more libraries
 Sadly I forgot to write down the benchmark results between the steps.
 
-####Substitute Redis list for a Redis has_key
+###Substitute Redis list for a Redis has_key
 Using a Redis list for the banner IDs to be stored in Redis for the campaign looks to be straight forward. When I benchmarked it, it was about as fast as retrieving the banner IDs from the database. So the Redis list was incredible slow.
 Instead of using a Redis list, I tried a Redis hash key, where the key is the campaign ID and the value all the banner IDs converted to a string. This was about ten times faster then a Redis list. See also http://redis.io/topics/data-types and http://redis.io/topics/memory-optimization for more information.
 I have included a benchmark for it in the file 'benchmarks/get_banner_ids_from_redis.rb'
 After 'fixing' this pitfall, the app reached about 5.000 requests per minute
 See the section 'benchmarking' for the current benchmark results.
 
-####Using thin webserver
+###Using thin webserver
 Using the thin-webserver instead of WEBrick. After 'fixing' this pitfall the app reaches about 7.500 requests per minute
 
-####Eliminating all queries in the frontend
+###Eliminating all queries in the frontend
 To eliminate all the queries in the frontend, the last step was to substitue the method 'Campaign#find' for 'Campaign#find_from_redis_by_id'.
 Substitute the method 'Campaign#find' for 'Campaign.find_from_redis_by_id' didn't have any performance improvements. That's maybe because I add different keys for every attribute in Redis. Adding just one key to Redis and put every attribute in that key, may
 probably result in a performance improvement. Because of a lack of time I didn't test it. 
@@ -165,11 +168,11 @@ database.
 
 After fixing this pitfall, sadly the app still reaches about 7.5000 requests per minute
 
-####Migration to Sinatra
+###Migration to Sinatra
 After migrating the app to Sinatra, the app reaches about 9.500 requests per minute using 'rackup.
 See the section 'benchmarking' for the current benchmark results.
 
-#### Stripping off more libraries
+### Stripping off more libraries
 Because of a lack of time I was not able to substitute ActiveRecord for Sequel and create plain Ruby scripts where possible.
 Hopefully if I had the time I could reach over 10.000 requests per minute.
 
@@ -223,6 +226,12 @@ For developing purposes 400 test banners are included in this application, so yo
 ###Usage of Redis
 However Memcache might be a more accepted solution, I used Redis, because I'm more familiar to Redis..
 
+###Deploying to Heroku
+Please note that a 'heroku' branch is added to Github to deploy to Heroku. This is because Heroku may require some specific configurations. For example my Gemfile.lock contains the gem 'railties 4.0/4'. This means that Heroku will start a Rails server, which will not work. So in the Heroku branch I deleted the Gemfile.lock. See also: https://devcenter.heroku.com/articles/ruby-support#rails-4-x-applications
+
+In practice I prefer to setup my own VPS. The benefit of your own VPS is in my opinion that you have full control. The downside of your own VPS is that the first deployment may take some time, because you have to establish the VPS and write your own capistrano-script before you can deploy.
+On Heroku you don't have full-control on the server, but deploying for the first time is in most cases easier. So due to a lack of time and the simplicity of Heroku I used Heroku in this case.
+
 ##Testing with Rspec
 Application tested using Rspec and Ruby 2.0.0p247
 Please note the following:
@@ -248,7 +257,7 @@ set :logging, false
 rake db:seed
 ```
 Please uninstall activerecord-4.1.0 to proceed.
-* HTTP authentication disabled in the test-environment, bbecause Capybara cannot handle it.
+* HTTP authentication disabled in the test-environment, because Capybara cannot handle it.
 
 ##Benchmarking
 Please note that only the benchmarks of the current app are written down. I forgot to write down interim results.
@@ -259,15 +268,18 @@ benchmarks/
 ````
 For the requests I use the gem 'curb', becuase it is super fast as said in the conclusion of this article: http://bibwild.wordpress.com/2012/04/30/ruby-http-performance-shootout-redux/.
 
+Sadly I didn't have the time to benchmark with another library besides 'Curb'. At each request, Curb starts a new session and I would like to benchmark it with a library that holds the session for each request.
+
 ###Requests
-Results for 10.000 requests made (see also benchmarks/requests.rb):
+Results for 10.000 requests made (see also benchmarks/requests.rb).
 Dump from Benchmark.measure:
 ````
 #<Benchmark::Tms:0x007fb6eb133928 @label="", @real=62.972004, @cstime=0.0, @cutime=0.0, @stime=0.65, @utime=1.6500000000000001, @total=2.3000000000000003>
 ```
 
-Resuls from getting 5.000 times 400 banner IDs from Redis
+Resuls from getting 5.000 times 400 banner IDs from Redis.
 Dump from Benchmark.measure:
 ````
 #<Benchmark::Tms:0x007fe90a979690 @label="", @real=3.016043, @cstime=0.0, @cutime=0.0, @stime=0.32999999999999996, @utime=2.4299999999999997, @total=2.76>
 ```
+Sadly I didn't have the time to implement RubyProfiler. Using Benmark.measure gives a very basic overview of the benchmark results.
