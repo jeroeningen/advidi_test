@@ -7,6 +7,9 @@ gem 'sinatra'
 # Use HAML
 gem 'haml'
 
+# Use Rake
+gem 'rake'
+
 # Use Active Record
 gem "sinatra-activerecord"
 
