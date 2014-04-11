@@ -1,4 +1,7 @@
 require 'redis-objects'
 
 # Set the Redis path for Heroku
-$redis = Redis.new(url: ENV["REDISTOGO_URL"]) if ENV["REDISTOGO_URL"].present?
+$redis = case
+  when ENV["REDISTOGO_URL"].present? then Redis.new(url: ENV["REDISTOGO_URL"])
+  else Redis.new
+end
