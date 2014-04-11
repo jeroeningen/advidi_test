@@ -11,10 +11,10 @@ end
 
 # GET /campaigns/:id
 get '/campaigns/:id' do
-  session[:banner_and_requests_made] = 
-    Campaign.find_from_redis_by_id(params[:id]).get_banner_and_requests_made(session[:banner_and_requests_made])
-  banner_path = session[:banner_and_requests_made][:current_banner_path]
-
+  session[params[:id]] = 
+    Campaign.find_from_redis_by_id(params[:id]).get_banner_and_requests_made(session[params[:id]])
+  banner_path = session[params[:id]][:current_banner_path]
+  
   # Render imae from Heroku on AWS
   if $environment == :production
     @banner_path = banner_path

@@ -88,7 +88,7 @@ If you still have problems setting up or running the application, please contact
 In this section I only describe the core-functionality as mentioned in the description of the test. I do not describe the amin-interface.
 
 ###What's in the session
-The session has an hash named 'banner_and_requests_made'. In this hash the following is stored:
+Each campaign in the session has its own hash. In this hash the following is stored:
 * requests_made - Array of the requests a user already made. See also section 'Campaign.request'.
 * current_banner_id - ID of the banner to be shown (current banner)
 * banner_ids_left - Banner IDs of banners not seen yet.
