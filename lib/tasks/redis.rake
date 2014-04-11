@@ -1,6 +1,7 @@
 namespace :redis do
   desc "Rbuild Redis for Campaigns"
   task :rebuild do
+    p ENV["REDISTOGO_URL"]
     # First flush Redis
     Redis.current.flushdb
     
