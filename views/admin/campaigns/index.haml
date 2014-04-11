@@ -1,0 +1,17 @@
+%h1 Campaigns
+
+%a{:href => "/admin/campaigns/new"} New campaign
+
+%table.table
+  - @campaigns.each do |campaign|
+    %tr
+      %td= campaign.name
+      %td
+        %a{:href => "/admin/campaigns/#{campaign.id}"} Show
+      %td
+        %a{:href => "/admin/campaigns/#{campaign.id}/edit"} Edit
+      %td
+        //To create a RESTFUL route I needed to create a form.
+        %form{:action => "/admin/campaigns/#{campaign.id}", :method => "post"}
+          %input{:type => "hidden", :name => "_method", :value => "delete"}
+          %button.btn-link{:type => :submit} Destroy

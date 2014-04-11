@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe "Admin" do
   before(:each) do
+    # Flush Redis, otherwise sometimes this spec may fail
+    Redis.current.flushdb
     @campaign_with_two_banners = FactoryGirl.create(:campaign_with_two_banners)
   end
   
