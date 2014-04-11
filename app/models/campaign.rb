@@ -109,7 +109,6 @@ class Campaign < ActiveRecord::Base
     
     { :current_banner_id => current_banner_id,
       :current_banner_path => Banner.paths[current_banner_id],
-      :current_banner_content_type => Banner.content_types[current_banner_id],
       :requests_made => request,
       :banner_ids_left => banner_ids_left
     }

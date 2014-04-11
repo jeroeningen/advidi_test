@@ -12,7 +12,6 @@ describe Redis do
       @campaign.get_banner_ids_from_redis.should == @campaign.banner_ids
       @campaign.get_random_ratio_from_redis.should == @campaign.random_ratio
       Banner.paths[@banner.id].should == @banner.image.path
-      Banner.content_types[@banner.id].should == @banner.image.content_type
     end
   end
 end

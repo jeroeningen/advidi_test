@@ -120,10 +120,8 @@ describe Campaign do
         @campaign_with_banners.get_banner_ids_from_redis.uniq.size.should == @campaign_with_banners.reload.banner_ids.size
         @campaign_with_banners.reload.banners.each do |banner|
           Banner.paths[banner.id].should == banner.image.path
-          Banner.content_types[banner.id].should == banner.image.content_type
         end
         Banner.paths[@destroyed_banner.id.to_s].should be_blank
-        Banner.content_types[@destroyed_banner.id.to_s].should be_blank
         
         #compare all values, assure that the weighted are added 'weighted' times to the array
         @campaign_with_banners.get_banner_ids_from_redis.size.should > @campaign_with_banners.reload.banner_ids.size
@@ -160,7 +158,6 @@ describe Campaign do
           @banner_ids_left_and_requests_made = Campaign.find_from_redis_by_id(@campaign_with_banners.id).get_banner_and_requests_made(@banner_ids_left_and_requests_made)
           @banner_ids_left_and_requests_made[:current_banner_id].should > 0
           @banner_ids_left_and_requests_made[:current_banner_path].should_not be_empty
-          @banner_ids_left_and_requests_made[:current_banner_content_type].should_not be_empty
           @banner_ids_left_and_requests_made[:requests_made][:current_request].should be_present
           @banner_ids_left_and_requests_made[:requests_made][:random].should be_present
           @banner_ids_left_and_requests_made[:requests_made][:weighted].should be_present

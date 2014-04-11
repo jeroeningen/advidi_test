@@ -8,11 +8,6 @@ So you are given the following business requirements:
 * The visitor should not see the same banner again until he has seen all other banners in that campaign.
 * In the back­end, you should also allow the user to “weight” banners (set ratios, see above) within a campaign._
 
-##IMPORTANT NOTE
-HIER VERDER
-When trying to view an image, heroku wants to download it.
-Because of a major issue with Amazon S3 Webservices when using Heroku in practice this application is not ready for production. Please see the section 'Deploying to Heroku' under 'Additional notes' and the section 'Bugs' for futher information.
-
 ##Foreword
 Please note that this README is written for reviewing purposes. 
 In the first place, this README is not written for people who just wants to use this application.
@@ -80,7 +75,7 @@ If you have runned the rspec-tests the development-envoironment may not work pro
 rake redis:rebuild
 ```
 
-If you have runned the rspec-tests the development-envoironment may not work properly anymore, because there is no distinction between development upload paths and test upload paths for Carrierwave. Currently I use the same images for testing purposes and development purposes, which may result in conflicts. Currently the only way to solve this is by deleting the seeded campaigns and seed the database again.
+Furthermore if you have runned the rspec-tests the development-envoironment may not work properly anymore, because there is no distinction between development upload paths and test upload paths for Carrierwave. Currently I use the same images for testing purposes and development purposes, which may result in conflicts. Currently the only way to solve this is by deleting the seeded campaigns and seed the database again.
 
 
 ##Still problems with the app?
@@ -95,7 +90,6 @@ The session has an hash named 'banner_and_requests_made'. In this hash the follo
 * current_banner_id - ID of the banner to be shown (current banner)
 * banner_ids_left - Banner IDs of banners not seen yet.
 * current_banner_path - Path to the current banner image
-* current_banner_ontent_type - Content type of the current banner
 
 ###Do a request
 If the user does a request there are three steps to be made.
@@ -115,10 +109,10 @@ The method works as follows:
 1. If the number of random and number of weighted requests are not present, they will be initialized with '0'.
 2. If the common denominator is not present, it wil be initialized as follows:
 If the random_ratio is either 0 or 100, the common_denominator will be '1'.
-Otherwise, the highest value will be determined that is divisible by the percentage random requests and divisible by the percentage weighted requests. To determine the 'minimum maximum' random requests and  'minimum maximum' weighted requests to be made, the common denominator is used.
+Otherwise, the highest value will be determined that is divisible by the percentage random requests and divisible by the percentage weighted requests. To determine the 'minimum maximum' random requests and  'minimum maximum' weighted requests to be made, the random ratio is divided by common denominator.
 3. Determine as follows which request should be made: 
-If the generated value is lower then the random ratio and the number of random requests made is lower then the maximum number random requests made, do a random request.
-If the maximum number of weighted requests made, do a random request.
+If the generated value is lower then the random ratio and the number of random requests made is lower then the maximum number random requests to be made (by using the common denominator), do a random request.
+If the maximum number of weighted requests made (by using the common denominator), do a random request.
 In all other cases do a weighted request
 
 ###Campaign.get_banner_and_requests_made
@@ -141,12 +135,12 @@ When a campaign is created, the random ratio is added to Redis in a hash key. Th
 When a campaign is deleted, the random ratio will be removed from Redis.
 
 ###Creating a banner
-When a banner is created the banner ID, banner path and banner content type are added to Redis in seperate hash keys. The banner path and banner content type can be found by the banner ID as key. The banner ID can be found in the campaign alongside the other associated banner IDs by the Campaign ID as key.
+When a banner is created the banner ID, the banner path is added to Redis in seperate hash keys. The banner path can be found by the banner ID as key. The banner ID can be found in the campaign alongside the other associated banner IDs by the Campaign ID as key. For optimization, the banner IDs are saved as a String instead of a list; see also section 'Substitute Redis list for a Redis has_key'. Because we always search with the campaign as starting point, we don't have to know the campaign_id from Redis inside the banner model.
 Because the banner can be updated I do an 'after_save' callback instead of an 'after_create' callback. Therefore the banneer ID needs to be deleted first, to overcome that the banner ID is added too much times.
 Note that the banner ID is added 'x' times, where x is equal to the weight. This is necessary to retrieve the next banner for a weighted  request.
 
 ###Deleting a banner
-When a banner is deleted, the banner path and banner content type are removed from Redis as well as the banner ID is removed from the campaign in Redis. 
+When a banner is deleted, the banner path is removed from Redis as well as the banner ID is removed from the campaign in Redis. 
 
 ##Pitfalls and progression during development
 I started with a Rails app, because I'm most familiar to Rails.

@@ -14,7 +14,6 @@ get '/campaigns/:id' do
   session[:banner_and_requests_made] = 
     Campaign.find_from_redis_by_id(params[:id]).get_banner_and_requests_made(session[:banner_and_requests_made])
   banner_path = session[:banner_and_requests_made][:current_banner_path]
-  content_type = session[:banner_and_requests_made][:current_banner_content_type]
   send_file banner_path, :disposition => "inline"
 end
 

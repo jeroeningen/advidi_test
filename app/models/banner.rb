@@ -9,7 +9,6 @@ class Banner < ActiveRecord::Base
   
   # TODO 'mage_paths' may be a better name then 'paths'
   hash_key :paths, :global => true
-  hash_key :content_types, :global => true
   
   after_save :add_banner_to_redis
   after_destroy :delete_banner_from_redis
@@ -39,7 +38,6 @@ class Banner < ActiveRecord::Base
       # moreover Carrierwave does not always set all attibutes right at this point
       # So I set the image path in a little strange way, to be sure, the path is always set right.
       Banner.paths[self.id] = "#{Dir.pwd}/public/#{image.store_dir}/#{image.file.present? ? image.file.filename : image.filename}"
-      Banner.content_types[self.id] = image.content_type
     end
   end
   
@@ -52,6 +50,5 @@ class Banner < ActiveRecord::Base
     end
     
     Banner.paths.delete self.id
-    Banner.content_types.delete self.id
   end
 end
