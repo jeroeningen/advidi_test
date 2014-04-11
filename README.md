@@ -274,9 +274,10 @@ Please note the following:
 ```
 rspec
 ````
-Some test may fail when running the command 'rspec' and need to be runned standalone. At this moment the following test need to be runned standalone:
+Some test may fail when running the command 'rspec' and need to be runned standalone. At this moment the following test may need to be runned standalone:
 ```
-spec/requests/login_spec.rb:9
+spec/requests/login_spec.rb:14
+spec/lib/redis_raketask_spec.rb:14
 ```
 
 * The Rspec test displays all the queries, which gives a bad overview. This setting seems not to work:
@@ -290,8 +291,7 @@ rake db:seed
 Please uninstall activerecord-4.1.0 to proceed.
 
 * HTTP authentication disabled in the test-environment, because Capybara cannot handle it.
-
-* Hosting file uploads on S3 seems not to work on Heroku. This means when a new deploy is done, uploaded files are lost.
+* For rendering the image from Amazon S3 on Heroku I used a HTML view instead of the method 'send_file'.
 * On the first request it looks to be that two requests are done, instead of one.
 
 ##Benchmarking
