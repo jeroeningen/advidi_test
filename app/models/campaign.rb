@@ -1,4 +1,3 @@
-require 'redis-objects'
 class Campaign < ActiveRecord::Base
   has_many :banners, :dependent => :destroy
   
