@@ -96,8 +96,11 @@ The session has an hash named 'banner_and_requests_made'. In this hash the follo
 
 ###Do a request
 If the user does a request there are three steps to be made.
+
 1. The campaign will be retrieved from Redis.
+
 2. The function 'Campaign.get_banner_and_requests_made' determines the next banner based on the requests already made. See also the sections 'Campaign.request' and 'Campaign.get_banner_and_requests_made'.
+
 3. Send the new banner to the user.
 
 ###Campaign.request
@@ -109,10 +112,13 @@ This function determines whether a random or a weighted request should be made b
 Note that it should be better to move the common denominator to the Campaign model as attribute.
 
 The method works as follows:
+
 1. If the number of random and number of weighted requests are not present, they will be initialized with '0'.
+
 2. If the common denominator is not present, it wil be initialized as follows:
 If the random_ratio is either 0 or 100, the common_denominator will be '1'.
 Otherwise, the highest value will be determined that is divisible by the percentage random requests and divisible by the percentage weighted requests. To determine the 'minimum maximum' random requests and  'minimum maximum' weighted requests to be made, the random ratio is divided by common denominator.
+
 3. Determine as follows which request should be made: 
 If the generated value is lower then the random ratio and the number of random requests made is lower then the maximum number random requests to be made (determined by using the common denominator), do a random request.
 If the maximum number of weighted requests made (determined by using the common denominator), do a random request.
@@ -122,13 +128,21 @@ In all other cases do a weighted request
 This function determines the next banner to be shown based on the requests already made. The 'banner and requests made' are passed as an argument. See section 'What's in the session' for the keys included in this array.
 
 The method works as folllows:
+
 1. If the 'banner_and_requests_made' hash is not available, initialize it. Needed for the first request.
+
 2. If the key 'requests_made' in the hash 'banners_and_requests_made' is not available, initialize it. Needed for the first request.
+
 3. Initialize the current banner ID to '0'.
+
 4. Get the 'banner IDs left'. For the first request, it must be retrieved from Redis.
+
 5. Determine the next request type based on the requests already made.
+
 6. Determine the next banner ID. If the request is random, each banner has an equal chance to be chosen. If the request is weighted, the weight of the banner will be taken into account.
+
 7. Delete the next banner ID from the hash banner IDs left.
+
 8. Create the new hash for the session.
 
 ###Creating a campaign
