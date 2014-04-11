@@ -1,6 +1,20 @@
 require "sinatra/activerecord"
 require "carrierwave"
 
+# Upload files to S3 when on Heroku
+if settings.production?
+  CarrierWave.configure do |config|
+    config.fog_credentials = {
+      :provider               => 'AWS',                        # required
+      :aws_access_key_id      => ENV['AWS_ACCESS_KEY_ID'],      # required
+      :aws_secret_access_key  => ENV['AWS_SECRET_ACCESS_KEY'], # required
+    }
+    config.fog_directory  = 'advidi-test-banners'                   # required
+  end
+  #HACK: Global variable used in the uploader
+  $environment = :production
+end
+
 # Require the models
 require_relative "../app/models/campaign"
 require_relative "../app/models/banner"
@@ -26,20 +40,5 @@ end
 
 # Set the Redis path for Heroku
 $redis = Redis.new(url: ENV["REDISTOGO_URL"]) if ENV["REDISTOGO_URL"].present?
-
-# Upload files to S3 when on Heroku
-if settings.production?
-  CarrierWave.configure do |config|
-    config.fog_credentials = {
-      :provider               => 'AWS',                        # required
-      :aws_access_key_id      => ENV['AWS_ACCESS_KEY_ID'],      # required
-      :aws_secret_access_key  => ENV['AWS_SECRET_ACCESS_KEY'], # required
-    }
-    config.fog_directory  = 'advidi-test-banners'                   # required
-  end
-  
-  #HACK: Global variable used in the uploader
-  $environment = :production
-end
 
 require_relative "settings"
