@@ -15,6 +15,9 @@ if settings.production?
   $environment = :production
 end
 
+# Set the Redis path for Heroku
+$redis = Redis.new(url: ENV["REDISTOGO_URL"]) if ENV["REDISTOGO_URL"].present?
+
 # Require the models
 require_relative "../app/models/campaign"
 require_relative "../app/models/banner"
@@ -37,8 +40,5 @@ else
   # Set the database connection on localhost
   require_relative "database"
 end
-
-# Set the Redis path for Heroku
-$redis = Redis.new(url: ENV["REDISTOGO_URL"]) if ENV["REDISTOGO_URL"].present?
 
 require_relative "settings"
