@@ -8,6 +8,7 @@ require_relative "../app/models/banner"
 # Require the helpers
 require_relative "../app/helpers/main"
 
+# Use Rack::Session::Pool
 require_relative "session"
 
 # Register ActiveRecord

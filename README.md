@@ -8,6 +8,11 @@ So you are given the following business requirements:
 * The visitor should not see the same banner again until he has seen all other banners in that campaign.
 * In the back­end, you should also allow the user to “weight” banners (set ratios, see above) within a campaign._
 
+##IMPORTANT NOTE
+HIER VERDER
+When trying to view an image, heroku wants to download it.
+Because of a major issue with Amazon S3 Webservices when using Heroku in practice this application is not ready for production. Please see the section 'Deploying to Heroku' under 'Additional notes' and the section 'Bugs' for futher information.
+
 ##Foreword
 Please note that this README is written for reviewing purposes. 
 In the first place, this README is not written for people who just wants to use this application.
@@ -69,6 +74,14 @@ Please run all the commands from the applicaton root, otherwise commands may not
 ```
 Dir.pwd
 ```
+
+If you have runned the rspec-tests the development-envoironment may not work properly anymore, because there is no distinction between all environments in Redis. To rebuild Redis, use the following command:
+```
+rake redis:rebuild
+```
+
+If you have runned the rspec-tests the development-envoironment may not work properly anymore, because there is no distinction between development upload paths and test upload paths for Carrierwave. Currently I use the same images for testing purposes and development purposes, which may result in conflicts. Currently the only way to solve this is by deleting the seeded campaigns and seed the database again.
+
 
 ##Still problems with the app?
 If you still have problems setting up or running the application, please contact me at jeroeningen <at> gmail dot com.
@@ -196,7 +209,9 @@ Hopefully if I had the time I could reach over 10.000 requests per minute.
 * Substitute 'Dir.pwd' for 'settings.root'
 * Create a Rake Task to 'refill' Redis. Useful e.g. if Redis is flushed.
 * Eliminate warning 'I18n.enforce_available_locales will default to true in the future. If you really want to skip validation of your locale you can set I18n.enforce_available_locales = false to avoid this message.'
-* Routes with a '/' on the end will not work. E.g. '/admin' works, but '/admin/' not. I think it's a very simple issue, but because of a lack of time I couldn't find out.
+* Make a distinction between the test-enironment and the development environment for Redis, to keep the development-environment running, AFTER you run your tests.
+* Make a disinction between the test-environment and development-environment for upload paths for Carrierwave, so no 'development' uploads will be deleted by the rspec-tests.
+* Routes ending with '/' does not work. E.g. /admin/ will not work, while '/admin' will work.
 
 
 ##Additional notes
@@ -228,6 +243,12 @@ For developing purposes 400 test banners are included in this application, so yo
 ###Usage of Redis
 However Memcache might be a more accepted solution, I used Redis, because I'm more familiar to Redis..
 
+###Routes
+The name of the file 'routes.rb' may be not the right name, but I couldn't find a better name. Something like 'controllers.rb' may be a better name, but it's not a real controller like in Rails. So not putting the file 'routes.rb' in the 'config' diectory looks to me the best solution. In my opinion I can't put the file 'routes.rb' in the config directory, because it also contains the logic of the routes.
+
+###Carrierwave
+By default Carrierwave uses the directory 'public/uploads' for all uploads. In my opinion, Paperclip has a better directory structure for uploads. Sadly Paperclip does not work properly with Sinatra.
+
 ###Deploying to Heroku
 Please note that a 'heroku' branch is added to Github to deploy to Heroku. This is because Heroku may require some additional configuration. So for simplicity I did it in a seperate branch.
 
@@ -236,6 +257,7 @@ On Heroku you don't have full-control on the server, but deploying for the first
 
 Currently I have a major issue that S3 Webservices are not working on Heroku. Which means that the uploaded banners are stored on the local filesystem. So after each deploy all banners will be lost.
 Furthermore, the seed Raketask does not work on Heroku (it does not upload the images). This is because Heroku uses the emphemeral filesystem. See also: http://stackoverflow.com/questions/12290223/how-can-i-access-files-from-a-rake-task-on-heroku
+
 
 ##Testing with Rspec
 Application tested using Rspec and Ruby 2.0.0p247

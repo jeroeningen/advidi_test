@@ -4,11 +4,6 @@
 require 'sinatra'
 require_relative "config/requirements"
 
-# This is a very ugly hack to get the Capybara test of the admin-interface working.
-before "/admin*" do
-  protected! if !settings.test?
-end
-
 # In Rails this should be added to the config-dir
 # Because a lot of 'controller-logic' is inside the routes, I decided to add it to the root-directory
 require_relative "routes"

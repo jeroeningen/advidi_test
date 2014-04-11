@@ -83,4 +83,9 @@ FactoryGirl.define do
     random_ratio 0
     banners high_weighted_banners
   end
+  factory :redis_raketask_campaign, :class => :campaign do
+    name "redis_raketask_campaign"
+    random_ratio 10
+    banners [FactoryGirl.build(:banner)]
+  end
 end

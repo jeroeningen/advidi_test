@@ -35,14 +35,6 @@ feature "Administer Campaigns" do
     click_button "Update campaign"
     Campaign.where(:name => @new_campaign_name, :random_ratio => @random_ratio).count.should == 1
 
-    # View a campaign in the frontend
-    visit "/admin/campaigns/#{Campaign.last.id}"
-    page.should have_content @new_campaign_name
-    click_link "Show in frontend"
-    #HACK: Body is tested for HTML image tag, because selenium doesnot support the function 'page.response_headers'
-    page.body.should include "<img"
-    # page.response_headers['Content-Type'].should == "image/png"
-    
     #Add a banner
     visit "/admin/campaigns/#{Campaign.last.id}"
     Campaign.where(:name => @new_campaign_name, :random_ratio => @random_ratio).first.banners.size.should == 0
@@ -51,6 +43,14 @@ feature "Administer Campaigns" do
     fill_in "banner[weight]", :with => 3
     click_button "Create banner"
     Campaign.where(:name => @new_campaign_name, :random_ratio => @random_ratio).first.banners.size.should == 1
+
+    # View a campaign in the frontend
+    visit "/admin/campaigns/#{Campaign.last.id}"
+    page.should have_content @new_campaign_name
+    click_link "Show in frontend"
+    #HACK: Body is tested for HTML image tag, because selenium doesnot support the function 'page.response_headers'
+    page.body.should include "<img"
+    # page.response_headers['Content-Type'].should == "image/png"
     
     #Delete a banner
     visit "/admin/campaigns/#{Campaign.last.id}"

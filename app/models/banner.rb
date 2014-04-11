@@ -6,6 +6,8 @@ class Banner < ActiveRecord::Base
   validates :weight, :numericality => {:greater_than => 0}
 
   include Redis::Objects
+  
+  # TODO 'mage_paths' may be a better name then 'paths'
   hash_key :paths, :global => true
   hash_key :content_types, :global => true
   
@@ -33,12 +35,10 @@ class Banner < ActiveRecord::Base
       #Add the banner ids to Redis as a value
       Campaign.banner_ids_from_redis[campaign_id] = banner_ids_from_redis.join(" ")
     
-      # At this moment the image path is a temporary path.
-      # The image path will be set in the callback 'after_commit'.
-      # Setting the image path for Redis in the callback 'after_commit', 
-      # may conflict with the callback 'after_destroy', where I delete the path from Redis.
-      # so that's why I set it this way.
-      Banner.paths[self.id] = "#{Dir.pwd}/public/#{image.store_path}"
+      # At this moment the image path is a temporary path, 
+      # moreover Carrierwave does not always set all attibutes right at this point
+      # So I set the image path in a little strange way, to be sure, the path is always set right.
+      Banner.paths[self.id] = "#{Dir.pwd}/public/#{image.store_dir}/#{image.file.present? ? image.file.filename : image.filename}"
       Banner.content_types[self.id] = image.content_type
     end
   end

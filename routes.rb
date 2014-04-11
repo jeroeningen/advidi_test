@@ -1,3 +1,8 @@
+# This is a very ugly hack to get the Capybara test of the admin-interface working.
+before "/admin*" do
+  protected! if !settings.test?
+end
+
 get "/" do
   #HACK: A little ugly way to get the first banner ID from Redis.
   redirect "/campaigns/#{Campaign.banner_ids_from_redis.first[0]}"
@@ -9,7 +14,7 @@ get '/campaigns/:id' do
     Campaign.find_from_redis_by_id(params[:id]).get_banner_and_requests_made(session[:banner_and_requests_made])
   banner_path = session[:banner_and_requests_made][:current_banner_path]
   content_type = session[:banner_and_requests_made][:current_banner_content_type]
-  send_file banner_path, type: content_type, :disposition => "inline"
+  send_file banner_path, :disposition => "inline"
 end
 
 # Admin routes
