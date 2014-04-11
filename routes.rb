@@ -1,5 +1,6 @@
-# This is a very ugly hack to get the Capybara test of the admin-interface working.
 before "/admin*" do
+  # HTTP authentication
+  # This is a very ugly hack to get the Capybara test of the admin-interface working.
   protected! if !settings.test?
 end
 

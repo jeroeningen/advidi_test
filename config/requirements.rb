@@ -35,7 +35,7 @@ if settings.production?
       :aws_access_key_id      => ENV['AWS_ACCESS_KEY_ID'],      # required
       :aws_secret_access_key  => ENV['AWS_SECRET_ACCESS_KEY'], # required
     }
-    config.fog_directory  = 'public/uploads'                   # required
+    config.fog_directory  = 'advidi-test-banners'                   # required
   end
   
   #HACK: Global variable used in the uploader
