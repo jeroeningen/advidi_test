@@ -16,7 +16,7 @@ get '/campaigns/:id' do
   banner_path = session[params[:id]][:current_banner_path]
   
   # Render imae from Heroku on AWS
-  if $environment == :production
+  if heroku?
     @banner_path = banner_path
     haml :"campaigns/index", :layout => false
   else

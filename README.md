@@ -73,7 +73,7 @@ Please run all the commands from the applicaton root, otherwise commands may not
 Dir.pwd
 ```
 
-If you have runned the rspec-tests the development-envoironment may not work properly anymore, because there is no distinction between all environments in Redis. To rebuild Redis, use the following command:
+If you have runned the rspec-tests the development-envoironment may not work properly anymore, because there is no distinction between the environments in Redis. To rebuild Redis, use the following command:
 ```
 rake redis:rebuild
 ```
@@ -186,7 +186,7 @@ The downside of adding just one key in Redis with all attributes in it, is that 
 
 Using Redis instead of the database, relieves the database. So there are more resources available for the database. These resources can
 be used for other purposes.
-Please note that if you use Redis the wrong way (e.g. using a large list instead of a single hash entry), it can be even slower then your
+Please note that if you use Redis the wrong way (e.g. using a list instead of a single hash entry), it may be even slower then your
 database.
 
 After fixing this pitfall, sadly the app still reaches about 7.500 requests per minute
@@ -203,7 +203,7 @@ Hopefully if I had the time I could reach over 10.000 requests per minute.
 * To speed up the application, please strip off ActiveRecord and implement Sequel
 * Use plain Ruby scripts where possible. So for example extract functions from the model that does not depend on the model itself.
 * Add just one key to Redis and put every attribute in that key, instead of a key for every attribute
-* Move the common denominator used in the request to the Campaign model as attribute.
+* Move the common denominator used in the request-array to the Campaign model as attribute.
 * 'Banner_ids_left' and the current request-ratio are stored in the session. This is a lot of data in the session, but it looks to be the only solution. Using Rack:Session:Pool is about as fast as storing it in a cookie, so I've chosen to use Rack:Session:Pool. This is because the Cookie may just have a size of 4 kB.
 * Because of limited time, I skipped creating a very user friendly admin GUI with a slider for the ratio and a multiple file uploader to upload the images
 * Because of limited time, I used Heroku for deployment, so no Capistrano script is added for deployment.
@@ -267,20 +267,19 @@ On Heroku you don't have full-control on the server, but deploying for the first
 
 ###Using Amazon Webservices
 Because Heroku uses the emphemeral filesystem I decided to use Amazon Webservices for file storage, so I don't lost the banner images after each deploy. See also: http://stackoverflow.com/questions/12290223/how-can-i-access-files-from-a-rake-task-on-heroku
-Sadly, the frontend does not work with Amazon S3, because the frontend uses 'send_file'. The method 'send_file' looks not to accept a URL, see also: http://stackoverflow.com/questions/12277971/using-send-file-to-download-a-file-from-amazon-s3 Unfortunately due to a lack of time, I couldn't dig into the problem.
-Because of this problem, for Heroku I created a HTML document in the frontend that can serve the image on Heroku. In practice, this is not an option, because rendering an HTML is slow.
+Sadly, the frontend does not work with Amazon S3, because the frontend uses 'send_file'. The method 'send_file' looks not to accept a URL, see also: http://stackoverflow.com/questions/12277971/using-send-file-to-download-a-file-from-amazon-s3 Unfortunately due to a lack of time, I couldn't dig into the problem. Because of this problem, for Heroku I created a HTML document in the frontend that can serve the image on Heroku. In practice, this is not an option, because rendering an HTML is slow.
 
 ###Git branches
 Please note that git has four branches
-* master - You can the current app here.
-* sinatra - You can find the sinatra app here.
-* heroku - Used to deploy to heroku and make the configurations for Heroku.
+* master - You can find the current app here.
+* sinatra - You can find the Sinatra app here.
+* heroku - Used to deploy to Heroku and make the configurations for Heroku.
 * rails - You can find the 'old' Rails app here.
 
 ##Testing with Rspec
 Application tested using Rspec and Ruby 2.0.0p247
 Please note the following:
-* The test coverage of the function '.get_banner_and_requests_made(requests_made_and_banners_seen)' may not always return the right test results. In rare cases, the weighted request might return different values then expected.
+* The test coverage of the function '.get_banner_and_requests_made(requests_made_and_banners_seen)' for the campaign wth weighted requests may not always return the right test results. In rare cases, the weighted request might return different values then expected.
 * Please note that the tests can be relatively slow, because all images will be added when creating a campaign.
 
 ##Known bugs
@@ -316,6 +315,8 @@ Alll the benchmarks lives in the following directory
 benchmarks/
 ````
 For the requests I use the gem 'curb', becuase it is super fast as said in the conclusion of this article: http://bibwild.wordpress.com/2012/04/30/ruby-http-performance-shootout-redux/.
+
+Please note that I have made duplicates of the factories. That looks ugly, but with making duplicates I can overcome that tests may fail when all rspec-tests are runned at once.
 
 Sadly I didn't have the time to benchmark with another library besides 'Curb'. At each request, Curb starts a new session and I would like to benchmark it with a library that holds the session for each request.
 

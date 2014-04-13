@@ -1,3 +1,5 @@
+# Please note that I have made duplicates of the factories. That looks ugly, 
+# but with making duplicates I can overcome that tests may fail when all rspec-tests are runned at once.
 campaign_with_banners, campaign_with_banners2, campaign_with_banners3, campaign_with_banners4 = [], [], [], []
 second_campaign_with_banners, updated_banners, two_banners, high_weighted_banners = [], [], [], []
 400.times do

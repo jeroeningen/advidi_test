@@ -8,6 +8,6 @@ if settings.production?
     }
     config.fog_directory  = 'advidi-test-banners'                   # required
   end
-  #HACK: Global variable used in the uploader
+  #HACK: Global variable used for the uploader
   $environment = :production
 end

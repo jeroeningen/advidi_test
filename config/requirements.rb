@@ -1,6 +1,9 @@
 require "sinatra/activerecord"
 require "carrierwave"
 
+# Helper method for Heroku
+require_relative "initializers/heroku"
+
 # Set the config for AWS
 require_relative "initializers/aws"
 

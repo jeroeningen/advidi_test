@@ -70,7 +70,7 @@ describe Campaign do
         end
       end
       it "returns a new request based on the ratio and the requests already made." do
-        @mixed_requests_made[:common_denominator].should == @common_denominator # 2
+        @mixed_requests_made[:common_denominator].should == @common_denominator # 5
         @mixed_requests_made[:random].should == @mixed_requests_campaign.random_ratio / @common_denominator # 7
         @mixed_requests_made[:weighted].should == (100 - @mixed_requests_campaign.random_ratio) / @common_denominator # 13
         @mixed_requests_made[:current_request].should_not be_empty
@@ -97,6 +97,7 @@ describe Campaign do
     it "finds the banner_ids and random_ratio by the id from Redis" do
       Campaign.find_from_redis_by_id(@campaign_with_banners.id).get_banner_ids_from_redis.uniq.size.should == @campaign_with_banners.banner_ids.size
       Campaign.find_from_redis_by_id(@campaign_with_banners.id).random_ratio.should == @campaign_with_banners.random_ratio
+      Campaign.find_from_redis_by_id(@campaign_with_banners.id).id.should == @campaign_with_banners.id
       
       # Check if the Campaign is deleted from Redis after the campaign is deleted
       Campaign.find_from_redis_by_id(@second_campaign_with_banners.id).should be_blank
@@ -105,7 +106,7 @@ describe Campaign do
     end
   end
   
-  # Note that it looks to be weird that the function below are tested in the Campaign model instead of in the Banner model.
+  # Note that it may looks to be weird that the some function below tested in the Campaign model instead of in the Banner model.
   # This is done, because the function 'banner.add_banner_to_redis' won't work without a campaign associated
   context ".get_banner_ids_from_redis" do
     context "adds and removes the banner ids to Redis taking into account the ratio" do
@@ -188,6 +189,7 @@ describe Campaign do
       end
       it "takes the weights into account when getting the banner" do
         #check if the banner with the lowest weight occured less then the other
+        # As mentioned in the README, please note that in rare cases this test may fail.
         @banner_ids_seen.count(@banner_lowest_weight.id).should < @banner_ids_seen.count(@banner_highest_weight.id)
       end
     end

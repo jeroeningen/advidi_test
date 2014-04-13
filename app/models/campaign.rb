@@ -50,23 +50,24 @@ class Campaign < ActiveRecord::Base
   # Determine which type of request must be made and return a hash of requests made
   # This function assures the random_ratio for as minimum requests as possible
   #
-  # For a more complex application it might be a good idea to move this function to a module. 
-  # For simplicity, I kept this function in the model
+  # For better performance it might be a good idea to move this function to a seperate Ruby script. 
+  # Due to a lack of time, I kept this function in the model
   def request(requests_made)
     # initiate requests_made if blank
     requests_made[:random] = 0 if requests_made[:random].blank?
     requests_made[:weighted] = 0 if requests_made[:weighted].blank?
     
     # Determine the number of requests to be made, before we must start over with counting
+    # TODO: Move the common_denominator to the Campaign model as attribute
     if requests_made[:common_denominator].blank?
       requests_made[:common_denominator] = case 
         when [0, 100].include?(random_ratio) then 1
-        # determine the highest common denominator
+        # Determine the highest common denominator
         else 50.downto(2).find {|i| random_ratio % i == 0 && (100 - random_ratio) % i == 0}
       end
     end
     
-    # determine which request should be made
+    # Determine which request should be made
     if ((rand * 100) < random_ratio && requests_made[:random] < (random_ratio / requests_made[:common_denominator])) ||
       ((100 - random_ratio) / requests_made[:common_denominator]) == requests_made[:weighted]
       requests_made[:random] += 1
@@ -97,7 +98,7 @@ class Campaign < ActiveRecord::Base
     # determine the request
     request = request(banner_and_requests_made[:requests_made])
     
-    # TODO: try to make this function faster
+    # TODO: try to make this function faster, e.g. using the cumulative density function
     case request[:current_request]
       when :random
         current_banner_id = banner_ids_left.uniq.sample
