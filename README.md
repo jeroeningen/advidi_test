@@ -221,6 +221,7 @@ Hopefully if I had the time I could reach over 10.000 requests per minute.
 * Routes ending with '/' does not work. E.g. /admin/ will not work, while '/admin' will work. Probably adding an '*' after the roue may fix this.
 * Moving the application from Heroku to a private VPS, to overcome the problem with the method 'send_file'.
 * Fix send_file, so it can read images from Amazon S3.
+* Create a cronjob on Heroku to 'rebuild' Redis every hour / day ...
 
 
 ##Additional notes
@@ -306,6 +307,7 @@ Please uninstall activerecord-4.1.0 to proceed.
 * HTTP authentication disabled in the test-environment, because Capybara cannot handle it.
 * For rendering the image from Amazon S3 on Heroku I used a HTML view instead of the method 'send_file'.
 * On the first request it looks to be that two requests are done, instead of one.
+* When you destroy a campaign, sometimes the app-root may crash. This is probably because not everything is destroyed from Redis.
 
 ##Benchmarking
 Please note that only the benchmarks of the current app are written down. I forgot to write down interim results.
