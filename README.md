@@ -6,7 +6,7 @@ So you are given the following business requirements:
 ** Weighted: The user is allowed to pick which banner will be displayed, and at which ratio. (E.g BannerA: 3, BannerB: 2, BannerC: 1 etc)
 * We want to allow the user to set a ratio between these 2 banner­picking mechanisms. So let’s say, if the user sets 30% Random 70% Weighted, then when a request comes in (front­end), there is a 30% chance that it will pick Random, 70% chance it will use Weighted.
 * The visitor should not see the same banner again until he has seen all other banners in that campaign.
-* In the back­end, you should also allow the user to “weight” banners (set ratios, see above) within a campaign._
+* In the back­end, you should also allow the user to “weight” banners (set ratios, see above) within a campaign.
 
 ##IMPORANT NOTE
 Because I used Amazon S3 on Heroku, I was unable to serve the banner image in the frontend. For Heroku I created a seperate HTML document to serve the image. For more information see the section 'Using Amazon Webservices'.
