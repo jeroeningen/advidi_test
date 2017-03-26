@@ -10,7 +10,7 @@ set :environment, :test
 set :run, false
 set :raise_errors, true
 set :logging, false
-set :database, {:adapter => "postgresql", :database => "advidi_test", :username => "stiptomedia_program"}
+set :database, {:adapter => "postgresql", :database => "advidi_test", :username => "jeroen"}
 
 def app
   Sinatra::Application

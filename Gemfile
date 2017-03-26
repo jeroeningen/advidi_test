@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.0.0'
+ruby '2.4.0'
 
 # Use Sinatra
 gem 'sinatra'
@@ -12,7 +12,7 @@ gem 'rake'
 
 # Use Active Record
 gem "sinatra-activerecord"
-gem 'activerecord', '4.0.4' # Fixed on version 4.0.4, otherwise migrations may fail.
+gem 'activerecord', '< 5.0.0'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
@@ -44,11 +44,10 @@ group :development do
 end
 
 group :test do
-  gem "rspec"
+  gem "rspec", '2.14.1'
   gem 'capybara'
-  gem 'selenium-webdriver'
   gem "factory_girl"
-  gem 'shoulda-matchers'
+  gem 'shoulda-matchers', '2.8.0'
   gem "database_cleaner"
   gem "curb"
 end

@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe "Admin" do
-  before(:each) do
+  before(:all) do
     # Flush Redis, otherwise sometimes this spec may fail
     Redis.current.flushdb
     @campaign_with_two_banners = FactoryGirl.create(:campaign_with_two_banners)
   end
-  
+
   # FIXME This test fails if runned combined with all the rspec-tests
   context "/" do
     it "is not protected with HTTP authentication" do
@@ -15,7 +15,7 @@ describe "Admin" do
     end
   end
   
-  # HTTP authentication is disabled in the test-environment, because Capybara can't handle it
+  # FIXME HTTP authentication is disabled in the test-environment, because Capybara can't handle it
   pending "/admin" do
     it "is protected with HTTP authentication" do
       get "/admin"
