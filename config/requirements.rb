@@ -1,4 +1,7 @@
 require "sinatra/activerecord"
+# Disable 'after_commit' warning
+ActiveRecord::Base.raise_in_transactional_callbacks = true
+
 require "carrierwave"
 
 # Helper method for Heroku

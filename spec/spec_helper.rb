@@ -28,12 +28,13 @@ RSpec.configure do |config|
   
   DatabaseCleaner.clean
 
+  ActiveRecord::Base.logger = nil unless ENV['LOG'] == true
   # config.infer_base_class_for_anonymous_controllers = false
 
   config.order = "random"
 
   require 'factory_girl'
-  Dir[Dir.pwd + "/spec/factories/**/*.rb"].each {|f| require f}
+  FactoryGirl.find_definitions
 
   # After running rspec, delete the tmp dirs by hand. 
   # This is probably not done automatically, because of the use of the database cleaner
